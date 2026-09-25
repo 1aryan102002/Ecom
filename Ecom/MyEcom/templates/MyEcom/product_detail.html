@@ -1,0 +1,104 @@
+{% extends 'MyEcom/base.html' %}
+{% block content %}
+
+{% if messages %}
+  <div id="msg-container" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;">
+    {% for message in messages %}
+      <div class="alert alert-success" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 5px; font-weight: bold;">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- The 1-second timer trick -->
+  <script>
+    setTimeout(function() {
+        var msg = document.getElementById('msg-container');
+        if (msg) {
+            msg.style.transition = "opacity 0.5s ease";
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500); // Completely clears it from the DOM
+        }
+    }, 1000); // 1000 milliseconds = 1 second
+  </script>
+{% endif %}
+
+
+    {% if product %}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-[#1a1c1e] p-6 rounded-lg shadow-lg">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-auto object-contain">
+                </div>
+                <div class="bg-[#1a1c1e] p-6 rounded-lg shadow-lg">
+                    <h1 class="text-3xl font-bold text-white mb-4">{{ product.name }}</h1>
+                    <p class="text-zinc-400 mb-4">{{ product.description }}</p>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-xl font-bold text-white">${{ product.price }}</span>
+                        {% if product.discount %}
+                            <span class="text-sm text-red-500 line-through">${{ product.original_price }}</span>
+                            <span class="text-sm text-green-500">({{ product.discount|floatformat:0 }}% off)</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-sm text-zinc-400 mb-4">Ratings: {{ product.ratings|floatformat:1 }} / 5</p>
+                    <p class="text-sm text-zinc-400 mb-4">Delivery Time: {{ product.delivery_time }}</p>
+                    <p class="text-sm {% if product.stock <= 0 %}text-red-500{% elif product.stock <= 5 %}text-amber-400{% else %}text-zinc-500{% endif %}">
+                        {% if product.stock <= 0 %}
+                            Out of stock
+                        {% elif product.stock <= 5 %}
+                            Only {{ product.stock }} left in stock
+                        {% else %}
+                            <div class="text-green-500">
+                                <select id = "quantity-select" class="bg-[#1a1c1e] text-zinc-200 border border-zinc-700 rounded px-2 py-1">
+                                    {% for i in quantity_range %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            In stock
+                        {% endif %}
+                    </p>
+                    <div class="mt-6">
+                        {% if product.stock > 0 %}
+                            <button id="atc-button" value="{{ product.id }}" class="bg-[#febd69] text-black px-4 py-2 rounded hover:bg-[#e5b85c] transition">Add to Cart</button>
+                            
+                            <button class="bg-[#febd69] text-black px-4 py-2 rounded hover:bg-[#e5b85c] transition">Buy Now</button>
+                        {% else %}
+                            <button class="bg-gray-500 text-white px-4 py-2 rounded cursor-not-allowed" disabled>Out of Stock</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 w-full px-4 sm:px-6 lg:px-10 py-8">
+            <div class="bg-[#1a1c1e] p-6 rounded-lg shadow-lg flex flex-col gap-4">
+                <h2 class="text-2xl font-semibold text-white mb-4">Product Description</h2>
+                <p class="text-zinc-400">ZEB-Max Ninja is a wireless premium mechanical keyboard that comes in a 60% compact form factor. It is a full RGB keyboard with 21 backlit LED modes; which can be customized to each key. The keyboard comes with 5 brightness levels and 5-speed modes. It has other features like it can be paired with 3 BT devices, N key rollover, PBT keycaps, and more. You can either go wireless or use BT to connect with your mobile/tablet/laptop and fast switch between them. ZEB-Max Ninja also can be used with a 2.4Ghz wireless nano receiver for a low latency gaming experience.  You can also opt to go wired connection as it comes with a detachable Type C cable.</p>
+                <img src="https://cdn.shopify.com/s/files/1/0575/7209/8197/files/Zeb-Max-Ninja-banner1.jpg?v=1639376696" alt="{{ product.name }}" class="w-full h-auto object-contain mt-4">
+                <p class="text-zinc-400 mt-4">Get impressive results in gaming or working with ZEB-Max Ninja, a wireless premium mechanical keyboard that comes in a 60% compact form factor, that saves precious space on the desk and frees up space for the mouse. The keyboard comes in both black and white colours.</p>
+                <img src="https://cdn.shopify.com/s/files/1/0575/7209/8197/files/Zeb-Max-Ninja-banner2.jpg?v=1639378419" alt="{{ product.name }}" class="w-full h-auto object-contain mt-4">
+            </div>
+        </div>
+    {% else %}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
+            <p class="text-zinc-400">Product not found.</p>
+        </div>
+    {% endif %}
+    <script>
+        $(document).on('click', '#atc-button', function(e) 
+        {
+            console.log('Add to Cart button clicked for product: {{ product.name }}');
+            $.ajax({
+                url: '{% url "cart_add" %}',
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'product_id': $("#atc-button").val(),
+                    'quantity': $("#quantity-select option:selected").text()
+                },
+            });
+        
+        });
+    </script>       
+{% endblock %}
