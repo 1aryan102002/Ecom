@@ -15,5 +15,6 @@ def cart_add(request):
        # product = Product.objects.get(id=product_id)
         product = get_object_or_404(Product, id=product_id) 
         cart.add(product = product, quantity=quantity)
-        cart_qty = len(cart)
+    # Computed outside the if-block so it always exists, even for non-POST requests
+    cart_qty = len(cart)
     return JsonResponse({'message': 'success', 'cart_qty': cart_qty})
