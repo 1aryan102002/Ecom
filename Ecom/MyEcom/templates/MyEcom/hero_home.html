@@ -2,28 +2,6 @@
 
 {% block content %}
 
-{% if messages %}
-  <div id="msg-container" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;">
-    {% for message in messages %}
-      <div class="alert alert-success" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 5px; font-weight: bold;">
-        {{ message }}
-      </div>
-    {% endfor %}
-  </div>
-
-  <!-- The 1-second timer trick -->
-  <script>
-    setTimeout(function() {
-        var msg = document.getElementById('msg-container');
-        if (msg) {
-            msg.style.transition = "opacity 0.5s ease";
-            msg.style.opacity = "0";
-            setTimeout(() => msg.remove(), 500); // Completely clears it from the DOM
-        }
-    }, 1000); // 1000 milliseconds = 1 second
-  </script>
-{% endif %}
-
 <div class="min-h-screen bg-[#0f1111]">
 
     <section class="bg-gradient-to-b from-[#232f3e] to-[#131921] px-6 sm:px-10 lg:px-16 py-12 sm:py-16">

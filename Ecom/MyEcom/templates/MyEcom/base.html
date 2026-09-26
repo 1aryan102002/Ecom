@@ -1,16 +1,116 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://code.jquery.com/jquery-4.0.0.js" integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U=" crossorigin="anonymous"></script>
-    <title>Document</title>
-</head>
-<body class="bg-[#0f1111] text-zinc-200 antialiased">
+    <script
+      src="https://code.jquery.com/jquery-4.0.0.js"
+      integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U="
+      crossorigin="anonymous"
+    ></script>
+    <title>ShopMate</title>
+  </head>
+  <body class="bg-[#0f1111] text-zinc-200 antialiased">
+    <!--Nav-->
+    <nav
+      class="bg-[#232f3e] border-b border-white/10 px-4 lg:px-16 py-2 flex items-center justify-between text-sm font-semibold"
+    >
+      <!-- Categories -->
+      <div class="flex items-center space-x-2">
+        <span class="text-zinc-200 px-4">☰ Categories</span>
+      </div>
+
+      <!-- Navigation Links (Hidden on Mobile) -->
+      <div class="hidden md:flex space-x-6">
+        <a href="{% url 'hero_home' %}" class="text-zinc-300 hover:text-[#febd69]">Home</a>
+        <a href="#" class="text-zinc-300 hover:text-[#febd69]">Shop</a>
+        <a href="#" class="text-zinc-300 hover:text-[#febd69]">About</a>
+        <a href="#" class="text-zinc-300 hover:text-[#febd69]">Contact</a>
+      </div>
+
+      <!-- Links -->
+      <div class="hidden sm:flex items-center space-x-4">
+        <a href="#" class="text-zinc-300 hover:text-[#febd69]">Sell On ShopMate</a>
+        <a href="#" class="text-zinc-300 hover:text-[#febd69]">Track your order</a>
+        <a href="#" class="text-zinc-300 hover:text-[#febd69]">USD</a>
+        <a href="#" class="text-zinc-300 hover:text-[#febd69]">🇮🇳 India</a>
+      </div>
+    </nav>
+    <nav
+      class="bg-[#131921] shadow-md px-4 lg:px-16 py-3 flex items-center justify-between"
+    >
+      <!-- Logo -->
+      <a href="{% url 'hero_home' %}" class="flex items-center space-x-2">
+        <span class="text-xl font-bold text-white px-4"
+          >Shop<span class="text-[#febd69]">Mate</span>
+        </span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="hidden md:block flex-grow mx-6">
+        <form class="relative w-full">
+          <input
+            type="text"
+            name="item_name"
+            placeholder="Search products..."
+            class="w-full px-4 py-2 pr-24 rounded-md bg-white text-[#0f1111] focus:outline-none focus:ring-2 focus:ring-[#febd69]"
+          />
+          <button
+            type="submit"
+            class="absolute right-1 top-1 bottom-1 px-4 rounded bg-[#febd69] text-[#0f1111] font-semibold hover:bg-[#f3a847]"
+          >
+            Search
+          </button>
+        </form>
+      </div>
+
+      <!-- Icons -->
+      <div class="flex items-center space-x-4">
+        <!-- Search Icon for Mobile -->
+        <button class="md:hidden text-zinc-300 hover:text-[#febd69]">🔍</button>
+
+        <!-- Cart -->
+        <a href="#" class="relative text-xl">
+          🛒
+          <span
+            id="cart-qty"
+            class="absolute -top-2 -right-2 text-xs bg-[#febd69] text-[#0f1111] font-bold rounded-full px-1"
+          >{{ cart|length }}</span>
+        </a>
+
+        <!-- User -->
+        <a href="#" class="text-zinc-300 hover:text-[#febd69]">👤</a>
+
+        <!-- Hamburger Menu (Mobile) -->
+        <button class="md:hidden text-zinc-300 hover:text-[#febd69]">☰</button>
+      </div>
+    </nav>
+    <!--Nav-->
+
+    {% if messages %}
+    <div id="msg-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[1000] space-y-2">
+      {% for message in messages %}
+      <div class="bg-emerald-600 text-white px-6 py-3 rounded-md font-bold shadow-lg">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    <script>
+      // Fade out and remove flash messages after 1 second
+      setTimeout(function () {
+        var msg = document.getElementById("msg-container");
+        if (msg) {
+          msg.style.transition = "opacity 0.5s ease";
+          msg.style.opacity = "0";
+          setTimeout(() => msg.remove(), 500);
+        }
+      }, 1000);
+    </script>
+    {% endif %}
+
     {% block content %}
-    
     {% endblock %}
-</body>
+  </body>
 </html>
