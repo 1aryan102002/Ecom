@@ -1,0 +1,14 @@
+{% extends 'MyEcom/base.html' %}
+{% block content %}
+<style>
+    #register-form .errorlist { color: #f87171; font-size: 0.875rem; margin: 0.25rem 0 0.5rem; }
+</style>
+<div id="register-card" class="max-w-md mx-auto bg-[#1a1c1e] p-8 rounded-lg shadow-lg mt-10">
+    <h2 class="text-2xl font-bold text-white mb-6">Register</h2>
+    <form id="register-form" method="post" novalidate>
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" id="register-btn" class="bg-[#febd69] text-black px-4 py-2 rounded hover:bg-[#e5b85c] transition">Register</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "MyEcom/base.html" %}
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
+    <h1 class="text-3xl font-bold text-white mb-6">Shopping Cart</h1>
+
+    {% if cart|length %}
+    <div class="bg-[#1a1c1e] border border-white/10 rounded-lg divide-y divide-white/10">
+        {% for item in cart %}
+        <div id="cart-item-{{ item.product.id }}" class="flex items-center gap-4 p-4">
+            <a href="{{ item.product.get_absolute_url }}" id="cart-item-image-{{ item.product.id }}" class="shrink-0 bg-white rounded-md w-24 h-24 flex items-center justify-center">
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="max-h-full max-w-full object-contain p-2">
+            </a>
+            <div class="flex-1 min-w-0">
+                <h3 class="text-zinc-100 font-medium truncate">{{ item.product.name }}</h3>
+                <p class="text-sm text-zinc-400 mt-1 font-bold">Price: ${{ item.price }}</p>
+                <select id="quantity-select-{{ item.product.id }}" class="bg-[#1a1c1e] text-zinc-200 border border-zinc-700 rounded px-2 py-1 mt-2">
+                    {% for i in item.quantity_range %}
+                        <option value="{{ i }}" {% if i == item.quantity %}selected{% endif %}>{{ i }}</option>
+                    {% endfor %}
+                </select>
+                <div>
+                    <button type="button" id="update-btn-{{ item.product.id }}" data-product-id="{{ item.product.id }}" class="update-cart bg-[#febd69] text-black px-4 py-2 rounded-md hover:bg-[#f3a847] transition mt-2">
+                        Update
+                    </button>
+                    <button type="button" id="remove-btn-{{ item.product.id }}" data-product-id="{{ item.product.id }}" class="remove-from-cart bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition mt-2">
+                        Remove
+                    </button>
+                </div>
+            </div>
+            <p id="item-total-{{ item.product.id }}" class="text-lg font-bold text-white">${{ item.total_price }}</p>
+            <p class="text-sm text-zinc-400 mt-1 flex justify-between">Delivery Time: {{ item.product.delivery_time }}</p>
+            
+        </div>
+        
+        {% endfor %}
+        <div class="text-sm text-zinc-400 mt-4 px-4 sm:px-6 lg:px-10 py-2 sticky bottom-0 bg-[#1a1c1e] border-white/10 flex justify-between items-center">
+            <strong id="cart-total">Total:${{ cart.get_total_price }}</strong>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-[#1a1c1e] border border-white/10 rounded-lg p-10 text-center">
+        <p class="text-zinc-400 mb-4">Your cart is empty.</p>
+        <a href="{% url 'hero_home' %}" class="inline-block bg-[#febd69] hover:bg-[#f3a847] text-[#0f1111] font-semibold px-6 py-2 rounded-full transition">Continue shopping</a>
+    </div>
+    {% endif %}
+</div>
+<script>
+    $(document).on("click", ".remove-from-cart", function(e) {
+        var productId = $(this).data("product-id");
+        $.ajax({
+            url: "{% url 'cart_delete' %}",
+            method: "POST",
+            data: {
+                'product_id': productId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(json) {
+                location.reload();  // Reload the page to reflect changes
+            }
+        });
+    });
+    $(document).on("click", ".update-cart", function(e) {
+        var productId = $(this).data("product-id");
+        var quantity = $("#quantity-select-" + productId).val();
+        console.log("Updating product ID " + productId + " to quantity " + quantity);
+        $.ajax({
+            url: "{% url 'update_cart' %}",
+            method: "POST",
+            data: {
+                'product_id': productId,
+                'quantity': quantity,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(json) {
+                console.log("Product updated successfully.");
+                location.reload();  // Reload the page to reflect changes
+            }
+        });
+    });
+</script>
+{% endblock %}

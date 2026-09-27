@@ -1,0 +1,10 @@
+{% extends 'MyEcom/base.html' %}
+{% block content %}
+<div id="verification-failed-card" class="max-w-md mx-auto bg-[#1a1c1e] p-8 rounded-lg shadow-lg mt-10 text-center">
+    <h2 id="verification-failed-title" class="text-2xl font-bold text-red-400 mb-4">Verification failed</h2>
+    <p id="verification-failed-message" class="text-gray-300 mb-6">
+        This verification link is invalid or has expired. Please register again to get a new link.
+    </p>
+    <a href="{% url 'register' %}" id="verification-failed-register-btn" class="bg-[#febd69] text-black px-4 py-2 rounded hover:bg-[#e5b85c] transition">Register Again</a>
+</div>
+{% endblock %}

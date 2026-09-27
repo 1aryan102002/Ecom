@@ -18,3 +18,24 @@ def cart_add(request):
     # Computed outside the if-block so it always exists, even for non-POST requests
     cart_qty = len(cart)
     return JsonResponse({'message': 'success', 'cart_qty': cart_qty})
+
+def cart_delete(request):
+    cart = Cart(request)
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        cart.delete(product_id = product_id)
+        return JsonResponse({'message': 'item deleted', 'cart_qty': len(cart)})
+    return JsonResponse({'message': 'POST required'}, status=405)
+
+def update_cart(request):
+    cart = Cart(request)
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        quantity = request.POST.get('quantity')
+        cart.update(product_id=product_id, quantity=quantity)
+        return JsonResponse({'message': 'cart updated', 'cart_qty': len(cart)})
+    return JsonResponse({'message': 'POST required'}, status=405)
+
+def cart_detail(request):
+    cart = Cart(request)
+    return render(request, 'cart/cart_detail.html', {'cart': cart})     

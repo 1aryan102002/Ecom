@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [h for h in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(','
 # Application definition
 
 INSTALLED_APPS = [
+    'users',
     'cart',
     'MyEcom',
     'django.contrib.admin',
@@ -124,10 +125,12 @@ STATIC_URL = 'static/'
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
+#MAILERS = {
+#    'default': {
+#        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+#    },
+#}
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -72,7 +72,7 @@
         <button class="md:hidden text-zinc-300 hover:text-[#febd69]">🔍</button>
 
         <!-- Cart -->
-        <a href="#" class="relative text-xl">
+        <a href="{% url 'cart_detail' %}" class="relative text-xl">
           🛒
           <span
             id="cart-qty"
@@ -81,7 +81,7 @@
         </a>
 
         <!-- User -->
-        <a href="#" class="text-zinc-300 hover:text-[#febd69]">👤</a>
+        <a href="{% url 'register' %}" id="nav-user-link" class="text-zinc-300 hover:text-[#febd69]">👤</a>
 
         <!-- Hamburger Menu (Mobile) -->
         <button class="md:hidden text-zinc-300 hover:text-[#febd69]">☰</button>
