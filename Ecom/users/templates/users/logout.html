@@ -1,0 +1,20 @@
+{% extends 'MyEcom/base.html' %}
+{% block content %}
+<div id="logout-card" class="max-w-md mx-auto bg-[#1a1c1e] p-8 rounded-lg shadow-lg mt-10 text-center">
+    {% if user.is_authenticated %}
+    <h2 id="logout-title" class="text-2xl font-bold text-white mb-4">Log out?</h2>
+    <p id="logout-message" class="text-gray-300 mb-6">
+        You are logged in as <span class="text-[#febd69] font-semibold">{{ user.username }}</span>. Logging out will also empty your cart.
+    </p>
+    <form id="logout-form" method="post" action="{% url 'logout' %}" class="flex justify-center gap-3">
+        {% csrf_token %}
+        <button type="submit" id="logout-confirm-btn" class="bg-[#febd69] text-black font-semibold px-4 py-2 rounded hover:bg-[#e5b85c] transition">Log out</button>
+        <a href="{% url 'hero_home' %}" id="logout-cancel-btn" class="border border-white/20 text-gray-300 px-4 py-2 rounded hover:border-[#febd69] hover:text-[#febd69] transition">Cancel</a>
+    </form>
+    {% else %}
+    <h2 id="logout-title" class="text-2xl font-bold text-white mb-4">You are logged out</h2>
+    <p id="logout-message" class="text-gray-300 mb-6">See you again soon.</p>
+    <a href="{% url 'login' %}" id="logout-login-btn" class="bg-[#febd69] text-black font-semibold px-4 py-2 rounded hover:bg-[#e5b85c] transition">Log in again</a>
+    {% endif %}
+</div>
+{% endblock %}

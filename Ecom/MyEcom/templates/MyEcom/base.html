@@ -28,6 +28,15 @@
         <a href="#" class="text-zinc-300 hover:text-[#febd69]">Shop</a>
         <a href="#" class="text-zinc-300 hover:text-[#febd69]">About</a>
         <a href="#" class="text-zinc-300 hover:text-[#febd69]">Contact</a>
+        {% if user.is_authenticated %}
+          <!-- Logout is a POST form (CSRF-protected), styled like a link -->
+          <form id="nav-logout-form" method="post" action="{% url 'logout' %}" class="inline">
+            {% csrf_token %}
+            <button type="submit" id="nav-logout-btn" class="text-zinc-300 hover:text-[#febd69] font-semibold cursor-pointer">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" id="nav-login-link" class="text-zinc-300 hover:text-[#febd69]">Login</a>
+        {% endif %}
       </div>
 
       <!-- Links -->
@@ -81,7 +90,11 @@
         </a>
 
         <!-- User -->
-        <a href="{% url 'register' %}" id="nav-user-link" class="text-zinc-300 hover:text-[#febd69]">👤</a>
+        {% if user.is_authenticated %}
+        <span id="nav-username" class="text-zinc-300 text-sm">👤 Hi, <span class="text-[#febd69] font-semibold">{{ user.first_name|default:user.username }}</span></span>
+        {% else %}
+        <a href="{% url 'login' %}" id="nav-user-link" class="text-zinc-300 hover:text-[#febd69]" title="Login">👤</a>
+        {% endif %}
 
         <!-- Hamburger Menu (Mobile) -->
         <button class="md:hidden text-zinc-300 hover:text-[#febd69]">☰</button>

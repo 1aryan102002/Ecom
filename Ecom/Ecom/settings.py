@@ -133,4 +133,30 @@ STATIC_URL = 'static/'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email goes through Gmail SMTP when a password is configured; otherwise it is
+# printed in the runserver terminal (console backend).
+# NEVER write the real password in this file - the repo is public on GitHub.
+# Put it in environment variables or in Ecom/local_settings.py (git-ignored,
+# see local_settings.example.py).
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+
+# Login / logout
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'hero_home'
+LOGOUT_REDIRECT_URL = 'hero_home'
+
+# Machine-specific secrets (git-ignored)
+try:
+    from .local_settings import *  # noqa: F401,F403
+except ImportError:
+    pass
+
+EMAIL_BACKEND = (
+    'django.core.mail.backends.smtp.EmailBackend'
+    if EMAIL_HOST_PASSWORD
+    else 'django.core.mail.backends.console.EmailBackend'
+)
