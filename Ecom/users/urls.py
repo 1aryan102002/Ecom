@@ -9,5 +9,6 @@ urlpatterns = [
     path('email-verification-failed/', views.email_verification_failed, name='email_verification_failed'),
     path('login/', views.login, name='login'),
     path('logout/', views.User_logout,name='logout'),
+    path('profile/', views.Profile, name='profile')
 
 ]

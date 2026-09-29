@@ -91,9 +91,11 @@
 
         <!-- User -->
         {% if user.is_authenticated %}
-        <span id="nav-username" class="text-zinc-300 text-sm">👤 Hi, <span class="text-[#febd69] font-semibold">{{ user.first_name|default:user.username }}</span></span>
+          <a href="{% url 'profile' %}" id="nav-user-profile" class="text-zinc-300 hover:text-[#febd69] text-sm" title="Profile">
+            👤 <span id="nav-username">Hi, <span class="text-[#febd69] font-semibold">{{ user.first_name|default:user.username }}</span></span>
+          </a>
         {% else %}
-        <a href="{% url 'login' %}" id="nav-user-link" class="text-zinc-300 hover:text-[#febd69]" title="Login">👤</a>
+          <a href="{% url 'register' %}" id="nav-user-link" class="text-zinc-300 hover:text-[#febd69]" title="Login">👤</a>
         {% endif %}
 
         <!-- Hamburger Menu (Mobile) -->

@@ -1,0 +1,97 @@
+{% extends 'MyEcom/base.html' %}
+
+{% block content %}
+<div id="profile-page" class="max-w-4xl mx-auto px-4 py-10">
+
+    <!-- Header -->
+    <div id="profile-header" class="bg-[#1a1c1e] p-6 rounded-lg shadow-lg flex items-center gap-5 mb-6">
+        <div id="profile-avatar" class="w-16 h-16 shrink-0 rounded-full bg-[#febd69] text-[#0f1111] text-2xl font-bold flex items-center justify-center">
+            {{ user.first_name|default:user.username|first|upper }}
+        </div>
+        <div class="min-w-0">
+            <h1 id="profile-name" class="text-2xl font-bold text-white truncate">
+                {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}
+            </h1>
+            <p id="profile-username" class="text-gray-400 text-sm">@{{ user.username }}</p>
+            <p id="profile-member-since" class="text-gray-400 text-sm">Member since {{ user.date_joined|date:"F j, Y" }}</p>
+        </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+
+        <!-- Account details -->
+        <section id="profile-account-card" class="bg-[#1a1c1e] p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-semibold text-white mb-4">Account details</h2>
+            <dl class="space-y-3 text-sm">
+                <div id="profile-first-name">
+                    <dt class="text-gray-400">First name</dt>
+                    <dd class="text-zinc-200">{{ user.first_name|default:"—" }}</dd>
+                </div>
+                <div id="profile-last-name">
+                    <dt class="text-gray-400">Last name</dt>
+                    <dd class="text-zinc-200">{{ user.last_name|default:"—" }}</dd>
+                </div>
+                <div id="profile-email">
+                    <dt class="text-gray-400">Email</dt>
+                    <dd class="text-zinc-200 break-all">
+                        {{ user.email|default:"—" }}
+                        {% if user.is_active %}
+                        <span id="profile-email-verified" class="ml-2 text-xs text-green-400">✔ Verified</span>
+                        {% endif %}
+                    </dd>
+                </div>
+                <div id="profile-last-login">
+                    <dt class="text-gray-400">Last login</dt>
+                    <dd class="text-zinc-200">{{ user.last_login|date:"F j, Y, g:i a"|default:"—" }}</dd>
+                </div>
+            </dl>
+        </section>
+
+        <!-- Contact / recovery info (from Profile) -->
+        <section id="profile-contact-card" class="bg-[#1a1c1e] p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-semibold text-white mb-4">Contact &amp; recovery</h2>
+            <dl class="space-y-3 text-sm">
+                <div id="profile-phone">
+                    <dt class="text-gray-400">Phone number</dt>
+                    <dd class="text-zinc-200">{{ profile.phone_number|default:"Not added" }}</dd>
+                </div>
+                <div id="profile-recovery-email">
+                    <dt class="text-gray-400">Recovery email</dt>
+                    <dd class="text-zinc-200 break-all">{{ profile.recovery_email|default:"Not added" }}</dd>
+                </div>
+            </dl>
+        </section>
+    </div>
+
+    <!-- Cart summary -->
+    <section id="profile-cart-card" class="bg-[#1a1c1e] p-6 rounded-lg shadow-lg mt-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-white">My cart</h2>
+            <a href="{% url 'cart_detail' %}" id="profile-cart-link" class="text-[#febd69] text-sm hover:underline">View cart →</a>
+        </div>
+        {% if cart|length %}
+        <ul id="profile-cart-items" class="divide-y divide-white/10 text-sm">
+            {% for item in cart %}
+            <li id="profile-cart-item-{{ item.product.id }}" class="py-2 flex justify-between gap-4">
+                <span class="text-zinc-200 truncate">{{ item.product.name }} × {{ item.quantity }}</span>
+                <span class="text-zinc-300 shrink-0">${{ item.total_price }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <p id="profile-cart-total" class="text-right text-white font-semibold mt-4">
+            {{ cart|length }} item{{ cart|length|pluralize }} · Total: <span class="text-[#febd69]">${{ cart.get_total_price }}</span>
+        </p>
+        {% else %}
+        <p id="profile-cart-empty" class="text-gray-400 text-sm">Your cart is empty.</p>
+        {% endif %}
+    </section>
+
+    <!-- Actions -->
+    <div id="profile-actions" class="mt-6 flex justify-end">
+        <form id="profile-logout-form" method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" id="profile-logout-btn" class="bg-[#febd69] text-black font-semibold px-4 py-2 rounded hover:bg-[#e5b85c] transition">Logout</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

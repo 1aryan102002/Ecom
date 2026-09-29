@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
+from .models import Profile
 from .token import account_activation_token
 
 
@@ -77,3 +78,27 @@ class LoginLogoutTests(TestCase):
         self.assertRedirects(response, reverse('hero_home'))
         self.assertFalse(response.context['user'].is_authenticated)
         self.assertContains(response, 'You have been logged out.')
+
+
+class ProfilePageTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('shopper', email='asha@example.com', password='Str0ng-pass-123',
+                                             first_name='Asha', last_name='Rao')
+
+    def test_anonymous_user_is_sent_to_login(self):
+        response = self.client.get(reverse('profile'))
+        self.assertRedirects(response, f"{reverse('login')}?next={reverse('profile')}")
+
+    def test_profile_shows_account_and_profile_details(self):
+        Profile.objects.create(user=self.user, phone_number='9876543210', recovery_email='backup@example.com')
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('profile'))
+        for text in ('Asha Rao', '@shopper', 'asha@example.com', '9876543210', 'backup@example.com',
+                     'id="profile-cart-empty"'):
+            self.assertContains(response, text)
+
+    def test_user_without_profile_row_still_renders(self):
+        # e.g. accounts made with createsuperuser before Profile existed
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('profile'))
+        self.assertContains(response, 'Not added', count=2)

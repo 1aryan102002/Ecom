@@ -11,6 +11,8 @@ from django.utils.encoding import force_bytes, force_str
 from .token import account_activation_token
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, logout
+from django.contrib.auth.decorators import login_required
+from .models import Profile as UserProfile
 
 # Create your views here.
 def register(request):
@@ -93,3 +95,14 @@ def User_logout(request):
         messages.success(request, 'You have been logged out.')
         return redirect('hero_home')
     return render(request, 'users/logout.html')
+
+@login_required  # anonymous users go to LOGIN_URL ('login')
+def Profile(request):
+    # Users made before Profile existed (e.g. createsuperuser) have no row yet
+    profile = UserProfile.objects.filter(user=request.user).first()
+    return render(request, 'users/profile_page.html', {'profile': profile})
+
+
+
+
+

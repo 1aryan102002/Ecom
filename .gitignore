@@ -15,6 +15,7 @@ staticfiles/
 # Secrets
 .env
 local_settings.py
+local_settings.example.py
 
 # Editors / OS
 .vscode/
